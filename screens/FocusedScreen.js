@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, View, Text, Button } from 'react-native';
+import {SafeAreaView, View, Text, Button, ScrollView, StyleSheet} from 'react-native';
 import TodayHeader from '../components/TodayHeader';
 import EntryButton from '../components/EntryButton';
 import moment from 'moment';
@@ -24,7 +24,7 @@ class FocusedScreen extends React.Component {
         this.state = {
             date: now.format("MMMM Do, YYYY"),
             dateRelative: "TODAY",
-            rememberMsg: "Remember when Dave bought you coffee yesterday?"
+            rememberMsg: "Remember when Dave bought you coffee yesterday?",
         }
     }
 
@@ -34,36 +34,37 @@ class FocusedScreen extends React.Component {
     }
 
     onSwipeRight() {
-        
+
+    }
+
+    onScrollLayout = (event) => {
+        const { height } = event.nativeEvent.layout;
+        this.setState({ height});
     }
 
     render() {
         return (
-            <SafeAreaView style={{ flex: 1 }}>
+            <View style={{ flex: 1 }}>
                 <View style={{ flex: 1 }}>
-                    <TodayHeader 
-                        date={this.state.date} 
-                        dateRelative={this.state.dateRelative} 
+                    <TodayHeader
+                        date={this.state.date}
+                        dateRelative={this.state.dateRelative}
                         rememberMsg={this.state.rememberMsg}
                         canGoBack={true}
                         canGoForward={true}
-                        />
+                    />
                 </View>
-                <View style={{ flex: 2 }}>
-                    <EntryButton entry={'entry1'} onPress={() => this.props.navigation.navigate('Detail')}/>
-                    <EntryButton entry={'entry2'}/>
-                    <EntryButton entry={'entry3'}/>
+                <View style={{flex: 2}}>
+                    <ScrollView style={{ borderColor: "red" }} onLayout={this.onScrollLayout}>
+                        <EntryButton entry={'entry1'} height={this.state.height}/>
+                        <EntryButton entry={'entry2'} height={this.state.height}/>
+                        <EntryButton entry={'entry3'} height={this.state.height}/>
+                    </ScrollView>
                 </View>
-                
-            </SafeAreaView>
+            </View>
         );
     }
 }
 
-const FocusedNavigator = createStackNavigator({
-    Focused: FocusedScreen,
-    Detail: EntryDetail,
-})
 
-
-export default FocusedNavigator;
+export default FocusedScreen;

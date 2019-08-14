@@ -3,7 +3,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     Text,
-    View,
+    View, TextInput,
 } from 'react-native'
 
 import { EntryDetail } from './EntryDetail';
@@ -11,7 +11,7 @@ import { EntryDetail } from './EntryDetail';
 class EntryButton extends Component {
     constructor(props) {
         super(props);
-        let { entry, onPress } = props;
+        let {entry, onPress} = props;
         this.state = {
             entry,
             showPopup: false,
@@ -20,28 +20,35 @@ class EntryButton extends Component {
 
     render() {
         return (
-            <TouchableOpacity
-                style={styles.container}
-                onPress={this.props.onPress}
-            >
-                <Text>{this.state.entry}</Text>
-            </TouchableOpacity>
+            <View style={{
+                alignItems: 'center',
+                justifyContent: 'space-around',
+                flexDirection: 'row',
+                backgroundColor: '#DDDDDD',
+                borderWidth: 0.5,
+                flexGrow: 1,
+                flexShrink: 0,
+                minHeight: this.props.height * 0.333 || 0
+            }}>
+                {this.state.isEditing ?
+                    <TextInput
+                        value={this.state.entry}
+                        onChangeText={(value) => this.setState({entry: value})}
+                        style={{padding: 0, margin: 0, textAlign: "center"}}
+                        autoFocus
+                        multiline
+                        onBlur={() => this.setState({isEditing: false})}
+                    /> :
+                    <Text
+                        onPress={() => this.setState({isEditing: true})}
+                        style={{padding: 0, margin: 0, paddingTop: 5, textAlign: "center"}}
+                    >
+                        {this.state.entry}
+                    </Text>
+                }
+            </View>
         )
     }
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        flexDirection: 'row',
-        backgroundColor: '#DDDDDD',
-        borderWidth: 0.5,
-    },
-    entry: {
- 
-    }
-});
 
 export default EntryButton;
